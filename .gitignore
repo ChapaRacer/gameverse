@@ -1,0 +1,13 @@
+# Dependencias de Node y Python
+node_modules/
+venv/
+
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+
+# Variables de entorno
+.env
+
+# Base de datos local
+*.db
