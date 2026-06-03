@@ -11,9 +11,10 @@ class User(Base):
     username = Column(String(50), unique=True, nullable=False, index=True)
     email = Column(String(100), unique=True, nullable=False, index=True)
     hashed_password = Column(String(255), nullable=False)
-    role = Column(String(10), default="user")  # "admin" or "user"
+    role = Column(String(10), default="user")
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    reviews = relationship("Review", back_populates="author", cascade="all, delete")
 
 
 class Game(Base):
@@ -30,3 +31,17 @@ class Game(Base):
     platforms = Column(String(500))
     description = Column(Text)
     added_at = Column(DateTime, default=datetime.utcnow)
+    reviews = relationship("Review", back_populates="game", cascade="all, delete")
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    game_id = Column(Integer, ForeignKey("games.id"), nullable=False)
+    rating = Column(Float, nullable=False)
+    comment = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    author = relationship("User", back_populates="reviews")
+    game = relationship("Game", back_populates="reviews")

@@ -67,3 +67,29 @@ class GameOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Reseñas
+class ReviewCreate(BaseModel):
+    game_id: int
+    rating: float = Field(..., ge=0, le=5)
+    comment: Optional[str] = None
+
+
+class ReviewUpdate(BaseModel):
+    rating: Optional[float] = Field(None, ge=0, le=5)
+    comment: Optional[str] = None
+
+
+class ReviewOut(BaseModel):
+    id: int
+    user_id: int
+    game_id: int
+    rating: float
+    comment: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+    author: UserOut
+    game: GameOut
+
+    class Config:
+        from_attributes = True

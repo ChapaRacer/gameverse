@@ -5,7 +5,7 @@ import time
 
 from db.database import engine, Base
 from models import models 
-from routers import auth, games
+from routers import auth, games, reviews
 
 Base.metadata.create_all(bind=engine)
 
@@ -44,6 +44,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 app.include_router(auth.router)
 app.include_router(games.router)
+app.include_router(reviews.router)
 
 
 @app.get("/", tags=["Health"])
