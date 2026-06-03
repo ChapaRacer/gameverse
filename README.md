@@ -39,3 +39,19 @@ pip install -r requirements.txt
 
 # Iniciar el servidor local
 uvicorn main:app --reload
+```
+
+### 3. Levantar el Frontend (React)
+Abre otra terminal, navega a la carpeta `/frontend` y ejecuta:
+
+```bash
+# Instalar dependencias
+npm install
+
+# Iniciar el servidor de desarrollo
+npm run dev
+```
+La aplicación estará disponible en http://localhost:5173
+
+> **Nota:** Las credenciales de acceso del usuario administrador 
+> se proporcionan en el video demostrativo del Día 3.
