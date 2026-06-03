@@ -45,7 +45,7 @@ def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-# ─── Admin-only user management ─────────────────────────────────
+# Manejo de usuarios del Administrador
 @router.get("/users", response_model=List[UserOut])
 def list_users(db: Session = Depends(get_db), _: User = Depends(require_admin)):
     return db.query(User).all()
