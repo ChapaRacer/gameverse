@@ -8,7 +8,7 @@ import './Home.css'
 const GENRES = [
   { slug: '', name: 'Todos' },
   { slug: 'action', name: 'Acción' },
-  { slug: 'rpg', name: 'RPG' },
+  { slug: 'role-playing-games-rpg', name: 'RPG' },
   { slug: 'shooter', name: 'Disparos' },
   { slug: 'adventure', name: 'Aventura' },
   { slug: 'strategy', name: 'Estrategia' },
