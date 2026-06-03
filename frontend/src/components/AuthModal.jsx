@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 
 export default function AuthModal({ mode, onClose, onSwitch }) {
   const { login, register } = useAuth()
+  const { addToast } = useToast()
   const [form, setForm] = useState({ username: '', email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,13 +18,16 @@ export default function AuthModal({ mode, onClose, onSwitch }) {
     try {
       if (mode === 'login') {
         await login(form.username, form.password)
+        addToast('Bienvenido de vuelta 🎮', 'success')
       } else {
         await register(form.username, form.email, form.password)
         await login(form.username, form.password)
+        addToast('Cuenta creada correctamente', 'success')
       }
       onClose()
     } catch (err) {
       setError(err.message)
+      addToast(err.message, 'error')
     } finally {
       setLoading(false)
     }

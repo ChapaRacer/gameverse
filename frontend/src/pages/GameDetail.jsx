@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { gamesService, reviewsService} from '../services/api'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import './GameDetail.css'
 
 function StarPicker({ value, onChange }) {
@@ -25,6 +26,7 @@ export default function GameDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { addToast } = useToast()
 
   const [game, setGame] = useState(null)
   const [localGame, setLocalGame] = useState(null)
@@ -79,28 +81,37 @@ export default function GameDetail() {
     if (!reviewForm.rating) return setReviewError('Selecciona una calificación')
     setSubmitting(true); setReviewError('')
     try {
-      const lg = await ensureSaved()
-      await reviewsService.create({ game_id: lg.id, ...reviewForm })
-      const r = await reviewsService.byGame(lg.id)
-      setReviews(r.data)
-      setReviewForm({ rating: 0, comment: '' })
+        const lg = await ensureSaved()
+        await reviewsService.create({ game_id: lg.id, ...reviewForm })
+        const r = await reviewsService.byGame(lg.id)
+        setReviews(r.data)
+        setReviewForm({ rating: 0, comment: '' })
+        addToast('Reseña publicada correctamente', 'success')
     } catch (err) {
-      setReviewError(err.message)
+        setReviewError(err.message)
+        addToast('Error al publicar la reseña', 'error')
     } finally { setSubmitting(false) }
   }
 
   const handleFavorite = async () => {
-    if (!user) return
+    if (!user) {
+        addToast('Inicia sesión para guardar favoritos', 'info')
+        return
+    }
     try {
-      const lg = await ensureSaved()
-      if (isFavorite) {
+        const lg = await ensureSaved()
+        if (isFavorite) {
         await gamesService.favorites.remove(lg.id)
         setIsFavorite(false)
-      } else {
+        addToast('Quitado de favoritos', 'info')
+        } else {
         await gamesService.favorites.add(lg.id)
         setIsFavorite(true)
-      }
-    } catch {}
+        addToast('Agregado a favoritos ♥', 'success')
+        }
+    } catch {
+        addToast('Error al actualizar favoritos', 'error')
+    }
   }
 
   if (loading) return <div className="loader" style={{ marginTop: '5rem' }} />
