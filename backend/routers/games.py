@@ -6,8 +6,8 @@ import os
 from dotenv import load_dotenv
 
 from db.database import get_db
-from models.models import Game, User
-from schemas.schemas import GameCreate, GameOut
+from models.models import Game, User, Favorite
+from schemas.schemas import GameCreate, GameOut, FavoriteOut
 from core.security import get_current_user, require_admin
 
 load_dotenv()
@@ -116,3 +116,32 @@ def delete_game(game_id: int, db: Session = Depends(get_db), _: User = Depends(r
         raise HTTPException(status_code=404, detail="Juego no encontrado")
     db.delete(game)
     db.commit()
+
+
+@router.post("/favorites/{game_id}", response_model=FavoriteOut, status_code=201)
+def add_favorite(game_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    game = db.query(Game).filter(Game.id == game_id).first()
+    if not game:
+        raise HTTPException(status_code=404, detail="Juego no encontrado")
+    existing = db.query(Favorite).filter_by(user_id=current_user.id, game_id=game_id).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Ya está en favoritos")
+    fav = Favorite(user_id=current_user.id, game_id=game_id)
+    db.add(fav)
+    db.commit()
+    db.refresh(fav)
+    return fav
+
+
+@router.delete("/favorites/{game_id}", status_code=204)
+def remove_favorite(game_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    fav = db.query(Favorite).filter_by(user_id=current_user.id, game_id=game_id).first()
+    if not fav:
+        raise HTTPException(status_code=404, detail="No está en favoritos")
+    db.delete(fav)
+    db.commit()
+
+
+@router.get("/favorites/me", response_model=List[FavoriteOut])
+def my_favorites(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return db.query(Favorite).filter(Favorite.user_id == current_user.id).all()

@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import GameDetail from './pages/GameDetail'
+import { SearchPage, CatalogPage, FavoritesPage } from './pages/OtherPages'
 import './index.css'
 
 export default function App() {
@@ -13,6 +14,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/game/:id" element={<GameDetail />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

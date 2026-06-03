@@ -15,6 +15,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     reviews = relationship("Review", back_populates="author", cascade="all, delete")
+    favorites = relationship("Favorite", back_populates="user", cascade="all, delete")
 
 
 class Game(Base):
@@ -32,6 +33,8 @@ class Game(Base):
     description = Column(Text)
     added_at = Column(DateTime, default=datetime.utcnow)
     reviews = relationship("Review", back_populates="game", cascade="all, delete")
+    favorites = relationship("Favorite", back_populates="game", cascade="all, delete")
+
 
 class Review(Base):
     __tablename__ = "reviews"
@@ -45,3 +48,14 @@ class Review(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     author = relationship("User", back_populates="reviews")
     game = relationship("Game", back_populates="reviews")
+
+
+class Favorite(Base):
+    __tablename__ = "favorites"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    game_id = Column(Integer, ForeignKey("games.id"), nullable=False)
+    added_at = Column(DateTime, default=datetime.utcnow)
+    user = relationship("User", back_populates="favorites")
+    game = relationship("Game", back_populates="favorites")

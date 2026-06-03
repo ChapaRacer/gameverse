@@ -33,6 +33,7 @@ export default function GameDetail() {
   const [reviewForm, setReviewForm] = useState({ rating: 0, comment: '' })
   const [submitting, setSubmitting] = useState(false)
   const [reviewError, setReviewError] = useState('')
+  const [isFavorite, setIsFavorite] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -48,6 +49,11 @@ export default function GameDetail() {
         setLocalGame(lg || null)
         if (lg) {
           reviewsService.byGame(lg.id).then(r => setReviews(r.data))
+          if (user) {
+            gamesService.favorites.list().then(r => {
+              setIsFavorite(r.data.some(f => f.game?.rawg_id === data.id))
+            })
+          }
         }
       })
     }).catch(() => navigate('/'))
@@ -83,6 +89,20 @@ export default function GameDetail() {
     } finally { setSubmitting(false) }
   }
 
+  const handleFavorite = async () => {
+    if (!user) return
+    try {
+      const lg = await ensureSaved()
+      if (isFavorite) {
+        await gamesService.favorites.remove(lg.id)
+        setIsFavorite(false)
+      } else {
+        await gamesService.favorites.add(lg.id)
+        setIsFavorite(true)
+      }
+    } catch {}
+  }
+
   if (loading) return <div className="loader" style={{ marginTop: '5rem' }} />
   if (!game) return null
 
@@ -111,6 +131,13 @@ export default function GameDetail() {
                 {game.playtime > 0 && <span>⏱ {game.playtime}h promedio</span>}
               </div>
             </div>
+            <button
+              className={`fav-hero-btn ${isFavorite ? 'active' : ''}`}
+              onClick={handleFavorite}
+              title={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+            >
+              {isFavorite ? '♥ Guardado' : '♡ Favorito'}
+            </button>
           </div>
         </div>
       </div>
@@ -137,7 +164,7 @@ export default function GameDetail() {
                 </div>
               </section>
             )}
-            
+
             <section className="detail-section">
               <h2 className="detail-section-title">Reseñas ({reviews.length})</h2>
 

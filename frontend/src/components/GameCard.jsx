@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './GameCard.css'
 
-export default function GameCard({ game }) {
+export default function GameCard({ game, onFavorite, isFavorite }) {
   const navigate = useNavigate()
   const [imgErr, setImgErr] = useState(false)
 
@@ -28,6 +28,15 @@ export default function GameCard({ game }) {
           <div className="game-card-placeholder">🎮</div>
         )}
         <div className="game-card-overlay" />
+        {onFavorite && (
+          <button
+            className={`fav-btn ${isFavorite ? 'active' : ''}`}
+            onClick={e => { e.stopPropagation(); onFavorite(game) }}
+            title={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+          >
+            {isFavorite ? '♥' : '♡'}
+          </button>
+        )}
       </div>
 
       <div className="game-card-body">

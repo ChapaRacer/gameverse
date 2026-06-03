@@ -93,3 +93,15 @@ class ReviewOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# Favoritos
+class FavoriteOut(BaseModel):
+    id: int
+    user_id: int
+    game_id: int
+    added_at: datetime
+    game: GameOut
+
+    class Config:
+        from_attributes = True
