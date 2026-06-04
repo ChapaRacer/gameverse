@@ -12,6 +12,8 @@ Plataforma web para el descubrimiento y gestión de videojuegos, desarrollada co
 
 Se implementó una base de datos relacional en SQLite cumpliendo con la Tercera Forma Normal (3NF) para garantizar la integridad de los datos.
 
+![Diagrama Entidad-Relación](./docs/gameverse.png)
+
 Tablas principales:
 1. **users:** Gestión de credenciales, roles (admin/user) y datos de usuario.
 2. **games:** Caché local de juegos consumidos desde RAWG para optimizar consultas.
@@ -30,9 +32,14 @@ Por temas de seguridad, las credenciales no están expuestas en el repositorio.
 Abre una terminal, navega a la carpeta `/backend` y ejecuta:
 
 ```bash
-# Crear y activar entorno virtual (Windows)
+# Crear y activar entorno virtual
 python -m venv venv
+
+# Activar entorno virtual (Windows)
 .\venv\Scripts\activate
+
+# Activar entorno virtual (Mac/Linux)
+source venv/bin/activate
 
 # Instalar dependencias
 pip install -r requirements.txt
