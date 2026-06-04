@@ -54,4 +54,4 @@ npm run dev
 La aplicación estará disponible en http://localhost:5173
 
 > **Nota:** Las credenciales de acceso del usuario administrador 
-> se proporcionan en el video demostrativo del Día 3.
+> se proporcionan en el reporte del Día 3.
