@@ -20,7 +20,7 @@ export default function GameCard({ game, onFavorite, isFavorite }) {
   const genreList = rawGenres.slice(0, 2).filter(Boolean);
 
   return (
-    <article className="card game-card" onClick={() => navigate(`/game/${game.rawg_id || game.slug}`)}>
+    <article className="card game-card" onClick={() => navigate(`/game/${game.rawg_id || game.id || game.slug}`)}>
       <div className="game-card-img">
         {!imgErr && game.background_image ? (
           <img src={game.background_image} alt={game.name} onError={() => setImgErr(true)} loading="lazy" />
